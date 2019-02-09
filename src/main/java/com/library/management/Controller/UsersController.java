@@ -31,4 +31,10 @@ public class UsersController {
 
         return JsonManager.getUsers(id);
     }
+
+    @RequestMapping(method = RequestMethod.PUT , produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object updateUser(@RequestBody UserModel user) throws Exception {
+        JsonManager.updateUser(user);
+        return user;
+    }
 }

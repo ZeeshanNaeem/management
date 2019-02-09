@@ -88,5 +88,53 @@ public class JsonManager {
 
     }
 
+    public static void updateUser(UserModel userModel) throws Exception {
+
+        JSONParser jsonParser = new JSONParser();
+        Object obj = jsonParser.parse(new FileReader(fileName));
+        JSONArray jsonArray = (JSONArray) obj;
+
+        List<UserModel> userList = new ArrayList<>();
+
+        for(int i=0 ; i< jsonArray.size() ; i++){
+
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+            Long id = (Long) jsonObject.get("id");
+            if(String.valueOf(userModel.getId()).equals(String.valueOf(id))){
+
+                jsonArray.remove(jsonObject);
+
+                //update case
+                jsonObject.put("id" , userModel.getId());
+                jsonObject.put("name" , userModel.getName());
+                jsonObject.put("cnic" , userModel.getCnic());
+                jsonObject.put("mobile" , userModel.getMobile());
+                jsonObject.put("address" , userModel.getAddress());
+
+                jsonArray.add(jsonObject);
+
+                FileWriter file = new FileWriter("fileData");
+                file.write(jsonArray.toJSONString());
+                file.flush();
+                file.close();
+                return;
+            }
+
+        }
+
+        //it means data doesnot exist in file , so insert new record
+        JSONObject newData = new JSONObject();
+        newData.put("id" , userModel.getId());
+        newData.put("name" , userModel.getName());
+        newData.put("cnic" , userModel.getCnic());
+        newData.put("mobile" , userModel.getMobile());
+        newData.put("address" , userModel.getAddress());
+        jsonArray.add(newData);
+
+        FileWriter file = new FileWriter("fileData");
+        file.write(jsonArray.toJSONString());
+        file.flush();
+        file.close();
+    }
 }
 
