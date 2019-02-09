@@ -9,6 +9,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonManager {
 
@@ -49,4 +51,42 @@ public class JsonManager {
 
         }
 
+
+    public static List<UserModel> getUsers(Integer userId) throws IOException, ParseException {
+        JSONParser jsonParser = new JSONParser();
+        Object obj = jsonParser.parse(new FileReader(fileName));
+        JSONArray jsonArray = (JSONArray) obj;
+
+        List<UserModel> userList = new ArrayList<>();
+
+        for(int i=0 ; i< jsonArray.size() ; i++){
+            UserModel userModel = new UserModel();
+
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+            Long id = (Long) jsonObject.get("id");
+            String name = (String) jsonObject.get("name");
+            String cnic = (String) jsonObject.get("cnic");
+            String mobile = (String) jsonObject.get("mobile");
+            String address = (String) jsonObject.get("address");
+
+            userModel.setId(Math.toIntExact(id));
+            userModel.setName(name);
+            userModel.setCnic(cnic);
+            userModel.setMobile(mobile);
+            userModel.setAddress(address);
+            userList.add(userModel);
+
+            if(userId!=null && userId.toString().equals(id.toString())){
+                userList = new ArrayList<>();
+                userList.add(userModel);
+                return userList;
+            }
+
+        }
+
+        return userList;
+
+    }
+
 }
+
